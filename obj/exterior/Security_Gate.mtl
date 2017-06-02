@@ -1,0 +1,237 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 23.08.2015 13:19:43
+
+newmtl Door
+	Ns 47.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.6840 0.6840 0.6840
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Door_Texture.jpg
+	map_Kd Door_Texture.jpg
+
+newmtl Glass
+	Ns 47.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5882 0.5882 0.5882
+	Kd 0.5882 0.5882 0.5882
+	Ks 2.5290 2.5290 2.5290
+	Ke 0.0000 0.0000 0.0000
+	map_d Glass_Opacity_Map_Falloff.jpg
+	map_refl Reflection_Map.jpg
+
+newmtl White_Paint__For_Gate___Window_Frames
+	Ns 58.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.9843 0.9843 0.9843
+	Kd 0.9843 0.9843 0.9843
+	Ks 1.5210 1.5210 1.5210
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Plant_Pots____Concrete
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Concrete_Texture.jpg
+	map_Kd Concrete_Texture.jpg
+	map_bump Concrete_Bump.jpg
+	bump Concrete_Bump.jpg
+
+newmtl concrete_slabs
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Grass
+	Ns 26.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.1620 0.1620 0.1620
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Grass.jpg
+	map_Kd Grass.jpg
+	map_bump Grass_Bump.jpg
+	bump Grass_Bump.jpg
+
+newmtl Soil
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Soil_Texture.jpg
+	map_Kd Soil_Texture.jpg
+	map_bump Soil_Bump.jpg
+	bump Soil_Bump.jpg
+
+newmtl Pond_Water
+	Ns 98.0000
+	Ni 1.5000
+	d 0.5000
+	Tr 0.5000
+	Tf 0.5000 0.5000 0.5000 
+	illum 2
+	Ka 0.1059 0.1294 0.0471
+	Kd 0.1059 0.1294 0.0471
+	Ks 4.3830 4.3830 4.3830
+	Ke 0.0000 0.0000 0.0000
+	map_bump Pond_Water_Bottom_texture.jpg
+	bump Pond_Water_Bottom_texture.jpg
+	map_refl Reflection_Map.jpg
+
+newmtl Front_Wall
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.8039 0.6588 0.4706
+	Kd 0.8039 0.6588 0.4706
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Front_Wall_Texture.JPG
+	map_Kd Front_Wall_Texture.JPG
+	map_bump Front_Wall_bump.jpg
+	bump Front_Wall_bump.jpg
+
+newmtl House
+	Ns 33.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7176 0.6588 0.5882
+	Kd 0.7176 0.6588 0.5882
+	Ks 0.7740 0.7740 0.7740
+	Ke 0.0000 0.0000 0.0000
+	map_bump House_Bump.png
+	bump House_Bump.png
+
+newmtl Small_Palm
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Dypsis_Texture.jpg
+	map_Kd Dypsis_Texture.jpg
+	map_d Dypsis_Opacity.jpg
+
+newmtl Ferns
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Fern_Texture.jpg
+	map_Kd Fern_Texture.jpg
+	map_d Fern_Opacity.jpg
+
+newmtl OlifantsOor_Plant
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Olifantsoor_Texture.jpg
+	map_Kd Olifantsoor_Texture.jpg
+	map_d Olifantsoor_Opacity.jpg
+
+newmtl Tar_Road
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Tar_road_Texture.jpg
+	map_Kd Tar_road_Texture.jpg
+	map_bump Tar_road_bump.jpg
+	bump Tar_road_bump.jpg
+
+newmtl Backgound
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Background.jpg
+	map_Kd Background.jpg
+	map_d Background_Opacity.jpg
+
+newmtl Pond_Water_Bottom
+	Ns 10.0000
+	Ni 1.5000
+	d 0.2300
+	Tr 0.7700
+	Tf 0.2300 0.2300 0.2300 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Pond_Water_Bottom_texture.jpg
+	map_Kd Pond_Water_Bottom_texture.jpg

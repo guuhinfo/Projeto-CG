@@ -35,6 +35,26 @@ function init() {
 	controls.minAzimuthAngle = - Infinity;
 	controls.maxAzimuthAngle = Infinity;
 	
+	// carrega o exterior
+	mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('obj/exterior/');
+	mtlLoader.load('Security_Gate.mtl', function(materials) {
+
+		materials.preload();
+		
+		objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('obj/exterior/');
+		objLoader.load('Security_Gate.obj', function (object) {
+			var house = object;
+			house.scale.set(70, 100, 70);
+			house.rotateY(Math.PI/2);
+			house.position.set(15, -35, -95);
+
+			scene.add(object);
+		});
+	});
+	
 	// carrega o sonic
 	mtlLoader = new THREE.MTLLoader();
 	mtlLoader.setPath('obj/sonic/');
@@ -53,6 +73,49 @@ function init() {
 			
 			scene.add(object);
 		});
+	});
+	
+	// carrega os aneis
+	mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('obj/ring/');
+	mtlLoader.load('ring.mtl', function(materials) {
+		materials.preload();
+
+		objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('obj/ring/');	
+
+		for (var i = 0; i < 3; i++) {
+			switch (i) {
+				case 0:
+					objLoader.load('ring.obj', function (object) {
+						rings[0] = object;
+						rings[0].scale.set(10, 10, 10);
+						rings[0].rotateX(Math.PI/2);
+						rings[0].position.set(35, -16, 0);
+						scene.add(rings[0]);
+					});	
+					break;
+				case 1:
+					objLoader.load('ring.obj', function (object) {
+						rings[1] = object;
+						rings[1].scale.set(10, 10, 10);
+						rings[1].rotateX(Math.PI/2);
+						rings[1].position.set(50, -16, 0);
+						scene.add(rings[1]);
+					});
+					break;
+				case 2:
+					objLoader.load('ring.obj', function (object) {
+						rings[2] = object;
+						rings[2].scale.set(10, 10, 10);
+						rings[2].rotateX(Math.PI/2);
+						rings[2].position.set(65, -16, 0);
+						scene.add(rings[2]);
+					});
+					break;
+			}
+		}
 	});
 	
 	// carrega as nuvens
@@ -135,6 +198,14 @@ function onWindowResize() {
 function animate() {
 
 	requestAnimationFrame(animate);
+	
+	// faz os aneis girarem
+	for (var i = 0; i < rings.length; i++) {
+		rings[i].rotation.z += 0.05;
+	}
+	
+	// faz o sol girar
+	sun.rotation.y += 0.01;
 	
 	controls.update();
 
