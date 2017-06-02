@@ -6,7 +6,7 @@ init();
 animate();
 
 function init() {
-
+    
     camera = new THREE.PerspectiveCamera(8, window.innerWidth / window.innerHeight, 1, 1000);
 	camera.position.x = 0;
 	camera.position.y = 100;
@@ -15,26 +15,26 @@ function init() {
     scene = new THREE.Scene();
 	rings = new Array();
 	clouds = new Array();
-
+	
 	renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-
-	// adiciona luz ambiente
+    
+	// adiciona luz ambiente	
 	var ambientLight = new THREE.AmbientLight(0x404040, 4.8);
 	scene.add(ambientLight);
-
+	
 	// faz a camera mexer
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
 	controls.addEventListener('change', render);
-
+	
 	// so permite mexer a camera horizontalmente
 	controls.minPolarAngle = Math.PI/2;
-	controls.maxPolarAngle = 0;
+	controls.maxPolarAngle = 0;	
 	controls.minAzimuthAngle = - Infinity;
 	controls.maxAzimuthAngle = Infinity;
-
+	
 	// carrega o sonic
 	mtlLoader = new THREE.MTLLoader();
 	mtlLoader.setPath('obj/sonic/');
@@ -50,10 +50,74 @@ function init() {
         	sonic.scale.set( 1, 1, 1 );
         	sonic.rotateY(Math.PI/1.6);
         	sonic.position.set(-50, -35, 0);
-
+			
 			scene.add(object);
 		});
 	});
+	
+	// carrega as nuvens
+	mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('obj/cloud/');
+	mtlLoader.load('island-cloud.mtl', function(materials) {
+
+		materials.preload();
+
+		objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('obj/cloud/');
+		for (var i = 0; i < 2; i++) {
+			switch(i) {
+				case 0:
+					objLoader.load('island-cloud.obj', function (object) {
+						clouds[0] = object;
+						clouds[0].scale.set(0.1, 0.1, 0.1);
+						clouds[0].rotateX(Math.PI/2);
+						clouds[0].position.set(50, 25, -20);
+						scene.add(clouds[0]); 
+					});
+					break;
+				case 1:
+					objLoader.load('island-cloud.obj', function (object) {
+						clouds[1] = object;
+						clouds[1].scale.set(0.1, 0.1, 0.1);
+						clouds[1].rotateX(Math.PI/2);
+						clouds[1].position.set(-50, 25, -20);
+						scene.add(clouds[1]);
+					});
+					break;
+			}
+		}
+	});
+	
+	// carrega e aplica a texture do sol
+	var textureLoader = new THREE.TextureLoader();
+	
+	uniforms = {
+
+		fogDensity: { value: 0.0001 },
+		fogColor:   { value: new THREE.Vector3(255, 203, 31) },
+		time:       { value: 1.0 },
+		uvScale:    { value: new THREE.Vector2(3.0, 1.0) },
+		texture1:   { value: textureLoader.load("texture/lava/cloud.png") },
+		texture2:   { value: textureLoader.load("texture/lava/lavatile.jpg") }
+
+	};
+
+	uniforms.texture1.value.wrapS = uniforms.texture1.value.wrapT = THREE.RepeatWrapping;
+	uniforms.texture2.value.wrapS = uniforms.texture2.value.wrapT = THREE.RepeatWrapping;
+	
+	// carrega o shader do sol
+	var sunMaterial = new THREE.ShaderMaterial( {
+		uniforms: uniforms,
+		vertexShader: document.getElementById('vertexShader').textContent,
+		fragmentShader: document.getElementById('fragmentShader').textContent,
+	});
+	
+	// cria o sol e aplica o shader
+	sun = new THREE.Mesh( new THREE.SphereGeometry(4, 32, 32), sunMaterial );
+	sun.rotation.x = 0;
+	sun.position.set(0, 30, -50);
+	scene.add(sun);
 
     window.addEventListener('resize', onWindowResize, false);
 }
@@ -71,7 +135,7 @@ function onWindowResize() {
 function animate() {
 
 	requestAnimationFrame(animate);
-
+	
 	controls.update();
 
 	render();
