@@ -190,11 +190,24 @@ function init() {
 }
 
 function sonicJump() {
+
+	for (var i = 0; i <= 20; i++) {
+		sonic.position.x = pontosSalto.vertices[i].x;
+		sonic.position.y = pontosSalto.vertices[i].y;
+		sonic.position.z = pontosSalto.vertices[i].z;
+	}
 		
 }
 
 function sonicFoward() {
+	if(count == 20)
+			return;
 
+	sonic.position.x = pontosReta.vertices[count].x;
+	sonic.position.y = pontosReta.vertices[count].y;
+	sonic.position.z = pontosReta.vertices[count].z;
+
+	count++;
 }
 
 function sonicMoves() {
