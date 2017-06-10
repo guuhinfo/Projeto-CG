@@ -190,7 +190,7 @@ function init() {
 }
 
 function sonicJump() {
-	
+		
 }
 
 function sonicFoward() {
@@ -248,11 +248,23 @@ function animate() {
 
 function criaCurva(opc) {
 	
-	if (opc == "reta") {
-		// cria curva da reta
+	if(opc == "reta") {
+		var reta = new THREE.QuadraticBezierCurve3(
+			new THREE.Vector3(sonic.position.x, -35, 0),
+			new THREE.Vector3(sonic.position.x/2, -35, 0),
+			new THREE.Vector3(30, -35, 0)
+		);
+		
+		pontosReta.vertices = reta.getPoints(20);
 	}
 	else {
-		// cria curva do salto
+		var salto = new THREE.QuadraticBezierCurve3(
+			new THREE.Vector3(sonic.position.x, -35, 0),
+			new THREE.Vector3(sonic.position.x, 0, 0),
+			new THREE.Vector3(sonic.position.x, -35, 0)
+		);
+	
+		pontosSalto.vertices = salto.getPoints(20);
 	}
 }
 
