@@ -1,6 +1,9 @@
 var camera, scene, renderer, controls;
 var mtlLoader, objLoader;
 var rings, sonic, clouds, sun;
+var pontosReta = new THREE.Geometry();
+var pontosSalto = new THREE.Geometry();
+var count = 0;
 
 init();
 animate();
@@ -19,8 +22,8 @@ function init() {
 	renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-    
+    document.body.appendChild(renderer.domElement);   
+	
 	// adiciona luz ambiente	
 	var ambientLight = new THREE.AmbientLight(0x404040, 4.8);
 	scene.add(ambientLight);
@@ -66,12 +69,13 @@ function init() {
 		objLoader.setMaterials(materials);
 		objLoader.setPath('obj/sonic/');
 		objLoader.load('Sonic.obj', function (object) {
-			sonic = object;
-        	sonic.scale.set( 1, 1, 1 );
+        	sonic = object;
+			sonic.scale.set( 1, 1, 1 );
         	sonic.rotateY(Math.PI/1.6);
-        	sonic.position.set(-50, -35, 0);
+        	sonic.position.set(-50, -35, 0);		
+			scene.add(sonic);
 			
-			scene.add(object);
+			sonicMoves();
 		});
 	});
 	
@@ -185,6 +189,35 @@ function init() {
     window.addEventListener('resize', onWindowResize, false);
 }
 
+function sonicJump() {
+	
+}
+
+function sonicFoward() {
+
+}
+
+function sonicMoves() {
+	
+	// anda um passo toda vez que a seta pra direita é pressionada
+	$(document).keydown(function(e){
+
+		if (e.which == 39) {
+			criaCurva("reta");
+			sonicFoward();
+		}
+	});
+	
+	// salta quando seta pra cima é pressionada
+	$(document).keydown(function(e){
+
+		if (e.which == 38) {
+			criaCurva("salto");
+			sonicJump();
+		}
+	});
+}
+
 
 function onWindowResize() {
 
@@ -196,7 +229,7 @@ function onWindowResize() {
 }
 
 function animate() {
-
+	
 	requestAnimationFrame(animate);
 	
 	// faz os aneis girarem
@@ -211,6 +244,16 @@ function animate() {
 
 	render();
 
+}
+
+function criaCurva(opc) {
+	
+	if (opc == "reta") {
+		// cria curva da reta
+	}
+	else {
+		// cria curva do salto
+	}
 }
 
 function render() {
