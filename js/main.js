@@ -3,10 +3,13 @@ var mtlLoader, objLoader;
 var rings, sonic, clouds, sun;
 var pontosReta = new THREE.Geometry();
 var pontosSalto = new THREE.Geometry();
-var count = 0;
+var count = 0, j = 0, jump = 0;
+var stats;
 
-init();
-animate();
+$(document).ready(function(){
+	init();
+	animate();
+});
 
 function init() {
     
@@ -19,7 +22,7 @@ function init() {
 	rings = new Array();
 	clouds = new Array();
 	
-	renderer = new THREE.WebGLRenderer({ alpha: true });
+	renderer = new THREE.WebGLRenderer({ antialias:true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);   
@@ -122,38 +125,43 @@ function init() {
 		}
 	});
 	
-	// carrega as nuvens
-	mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setPath('obj/cloud/');
-	mtlLoader.load('island-cloud.mtl', function(materials) {
+	// carrega textura das nuvens
+	var texture = new THREE.TextureLoader().load( "../texture/cloud.jpg" );
 
-		materials.preload();
+	// carrega primeira nuvem
+	objLoader = new THREE.OBJLoader();
+    objLoader.load( 'obj/cloud/island-cloud.obj', function ( object ) {
 
-		objLoader = new THREE.OBJLoader();
-		objLoader.setMaterials(materials);
-		objLoader.setPath('obj/cloud/');
-		for (var i = 0; i < 2; i++) {
-			switch(i) {
-				case 0:
-					objLoader.load('island-cloud.obj', function (object) {
-						clouds[0] = object;
-						clouds[0].scale.set(0.1, 0.1, 0.1);
-						clouds[0].rotateX(Math.PI/2);
-						clouds[0].position.set(50, 25, -20);
-						scene.add(clouds[0]); 
-					});
-					break;
-				case 1:
-					objLoader.load('island-cloud.obj', function (object) {
-						clouds[1] = object;
-						clouds[1].scale.set(0.1, 0.1, 0.1);
-						clouds[1].rotateX(Math.PI/2);
-						clouds[1].position.set(-50, 25, -20);
-						scene.add(clouds[1]);
-					});
-					break;
-			}
-		}
+		clouds[0] = object;
+		clouds[0].scale.set(0.1, 0.1, 0.1);
+		clouds[0].rotateX(Math.PI/2);
+		clouds[0].position.set(50, 25, -20);
+
+		clouds[0].traverse( function (child) {
+
+			if (child instanceof THREE.Mesh)
+				child.material.map = texture;
+		} );
+
+		scene.add(clouds[0]);
+	});
+
+	// carrega segunda nuvem
+	objLoader = new THREE.OBJLoader();
+    objLoader.load( 'obj/cloud/island-cloud.obj', function ( object ) {
+
+		clouds[1] = object;
+		clouds[1].scale.set(0.1, 0.1, 0.1);
+		clouds[1].rotateX(Math.PI/2);
+		clouds[1].position.set(-50, 25, -20);
+
+		clouds[1].traverse( function (child) {
+
+			if (child instanceof THREE.Mesh)
+				child.material.map = texture;
+		} );
+
+		scene.add(clouds[1]);
 	});
 	
 	// carrega e aplica a texture do sol
@@ -186,20 +194,23 @@ function init() {
 	sun.position.set(0, 30, -50);
 	scene.add(sun);
 
+	// painel status webgl
+	stats = new Stats();
+	stats.showPanel(0);
+	document.body.appendChild(stats.dom);
+
     window.addEventListener('resize', onWindowResize, false);
 }
 
 function sonicJump() {
 
-	for (var i = 0; i <= 20; i++) {
-		sonic.position.x = pontosSalto.vertices[i].x;
-		sonic.position.y = pontosSalto.vertices[i].y;
-		sonic.position.z = pontosSalto.vertices[i].z;
-	}
-		
+	sonic.position.x = pontosSalto.vertices[j].x;
+	sonic.position.y = pontosSalto.vertices[j].y;
+	sonic.position.z = pontosSalto.vertices[j].z;
 }
 
 function sonicFoward() {
+
 	if(count == 20)
 			return;
 
@@ -225,8 +236,10 @@ function sonicMoves() {
 	$(document).keydown(function(e){
 
 		if (e.which == 38) {
+			jump = 1;
+			j = 0;
 			criaCurva("salto");
-			sonicJump();
+
 		}
 	});
 }
@@ -242,8 +255,13 @@ function onWindowResize() {
 }
 
 function animate() {
-	
-	requestAnimationFrame(animate);
+	stats.begin();
+
+	// faz o sonic pular
+	if (jump == 1 && j <= 20) {
+		sonicJump();
+		j++;
+	}
 	
 	// faz os aneis girarem
 	for (var i = 0; i < rings.length; i++) {
@@ -255,12 +273,16 @@ function animate() {
 	
 	controls.update();
 
+	stats.end();
+
 	render();
+	requestAnimationFrame(animate);
 
 }
 
 function criaCurva(opc) {
 	
+	// cria curva para o sonic andar para frente
 	if(opc == "reta") {
 		var reta = new THREE.QuadraticBezierCurve3(
 			new THREE.Vector3(sonic.position.x, -35, 0),
@@ -270,7 +292,8 @@ function criaCurva(opc) {
 		
 		pontosReta.vertices = reta.getPoints(20);
 	}
-	else {
+	// cria curva para o sonic pular
+	else if (opc == "salto") {
 		var salto = new THREE.QuadraticBezierCurve3(
 			new THREE.Vector3(sonic.position.x, -35, 0),
 			new THREE.Vector3(sonic.position.x, 0, 0),
@@ -279,6 +302,7 @@ function criaCurva(opc) {
 	
 		pontosSalto.vertices = salto.getPoints(20);
 	}
+
 }
 
 function render() {
