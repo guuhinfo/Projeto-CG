@@ -1,4 +1,6 @@
-var camera, scene, renderer, controls;
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+var camera, scene, renderer, controls, clock, mixer;
 var mtlLoader, objLoader;
 var rings, sonic, clouds, sun;
 var pontosReta = new THREE.Geometry();
@@ -18,6 +20,7 @@ function init() {
 	camera.position.y = 100;
     camera.position.z = 500;
 	
+	clock = new THREE.Clock();
     scene = new THREE.Scene();
 	rings = new Array();
 	clouds = new Array();
@@ -193,6 +196,33 @@ function init() {
 	sun.rotation.x = 0;
 	sun.position.set(0, 30, -50);
 	scene.add(sun);
+	
+	mixer = new THREE.AnimationMixer(scene);
+	
+	var loader = new THREE.JSONLoader();
+	loader.load( 'obj/stork.js', function ( geometry, materials ) {
+		var material = materials[ 0 ];
+		material.morphTargets = true;
+		material.color.setHex(0x000000);
+
+		mesh = new THREE.Mesh(geometry, materials);
+
+		mesh.position.set(0, 17, 0);
+
+		mesh.scale.set(0.1, 0.1, 0.1);
+
+		mesh.rotateY(Math.PI/2);
+
+		mesh.matrixAutoUpdate = false;
+		mesh.updateMatrix();
+
+		scene.add(mesh);
+
+		mixer.clipAction(geometry.animations[0], mesh)
+				.setDuration(1)
+				.startAt( - Math.random() )
+				.play();
+	} );
 
 	// painel status webgl
 	stats = new Stats();
@@ -306,7 +336,8 @@ function criaCurva(opc) {
 }
 
 function render() {
-
+	
+	mixer.update( clock.getDelta() );
 	camera.lookAt(scene.position);
 	renderer.render(scene, camera);
 
