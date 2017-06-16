@@ -1,4 +1,4 @@
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+if (! Detector.webgl) Detector.addGetWebGLMessage();
 
 var camera, scene, renderer, controls, clock, mixer;
 var mtlLoader, objLoader;
@@ -44,185 +44,12 @@ function init() {
 	controls.minAzimuthAngle = - Infinity;
 	controls.maxAzimuthAngle = Infinity;
 	
-	// carrega o exterior
-	mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setPath('obj/exterior/');
-	mtlLoader.load('Security_Gate.mtl', function(materials) {
-
-		materials.preload();
-		
-		objLoader = new THREE.OBJLoader();
-		objLoader.setMaterials(materials);
-		objLoader.setPath('obj/exterior/');
-		objLoader.load('Security_Gate.obj', function (object) {
-			var house = object;
-			house.scale.set(70, 100, 70);
-			house.rotateY(Math.PI/2);
-			house.position.set(15, -35, -95);
-
-			scene.add(object);
-		});
-	});
-	
-	// carrega o sonic
-	mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setPath('obj/sonic/');
-	mtlLoader.load('Sonic.mtl', function(materials) {
-
-		materials.preload();
-
-		objLoader = new THREE.OBJLoader();
-		objLoader.setMaterials(materials);
-		objLoader.setPath('obj/sonic/');
-		objLoader.load('Sonic.obj', function (object) {
-        	sonic = object;
-			sonic.scale.set( 1, 1, 1 );
-        	sonic.rotateY(Math.PI/1.6);
-        	sonic.position.set(-50, -35, 0);		
-			scene.add(sonic);
-			
-			sonicMoves();
-		});
-	});
-	
-	// carrega os aneis
-	mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setPath('obj/ring/');
-	mtlLoader.load('ring.mtl', function(materials) {
-		materials.preload();
-
-		objLoader = new THREE.OBJLoader();
-		objLoader.setMaterials(materials);
-		objLoader.setPath('obj/ring/');	
-
-		for (var i = 0; i < 3; i++) {
-			switch (i) {
-				case 0:
-					objLoader.load('ring.obj', function (object) {
-						rings[0] = object;
-						rings[0].scale.set(10, 10, 10);
-						rings[0].rotateX(Math.PI/2);
-						rings[0].position.set(35, -16, 0);
-						scene.add(rings[0]);
-					});	
-					break;
-				case 1:
-					objLoader.load('ring.obj', function (object) {
-						rings[1] = object;
-						rings[1].scale.set(10, 10, 10);
-						rings[1].rotateX(Math.PI/2);
-						rings[1].position.set(50, -16, 0);
-						scene.add(rings[1]);
-					});
-					break;
-				case 2:
-					objLoader.load('ring.obj', function (object) {
-						rings[2] = object;
-						rings[2].scale.set(10, 10, 10);
-						rings[2].rotateX(Math.PI/2);
-						rings[2].position.set(65, -16, 0);
-						scene.add(rings[2]);
-					});
-					break;
-			}
-		}
-	});
-	
-	// carrega textura das nuvens
-	var texture = new THREE.TextureLoader().load( "../texture/cloud.jpg" );
-
-	// carrega primeira nuvem
-	objLoader = new THREE.OBJLoader();
-    objLoader.load( 'obj/cloud/island-cloud.obj', function ( object ) {
-
-		clouds[0] = object;
-		clouds[0].scale.set(0.1, 0.1, 0.1);
-		clouds[0].rotateX(Math.PI/2);
-		clouds[0].position.set(50, 25, -20);
-
-		clouds[0].traverse( function (child) {
-
-			if (child instanceof THREE.Mesh)
-				child.material.map = texture;
-		} );
-
-		scene.add(clouds[0]);
-	});
-
-	// carrega segunda nuvem
-	objLoader = new THREE.OBJLoader();
-    objLoader.load( 'obj/cloud/island-cloud.obj', function ( object ) {
-
-		clouds[1] = object;
-		clouds[1].scale.set(0.1, 0.1, 0.1);
-		clouds[1].rotateX(Math.PI/2);
-		clouds[1].position.set(-50, 25, -20);
-
-		clouds[1].traverse( function (child) {
-
-			if (child instanceof THREE.Mesh)
-				child.material.map = texture;
-		} );
-
-		scene.add(clouds[1]);
-	});
-	
-	// carrega e aplica a texture do sol
-	var textureLoader = new THREE.TextureLoader();
-	
-	uniforms = {
-
-		fogDensity: { value: 0.0001 },
-		fogColor:   { value: new THREE.Vector3(255, 203, 31) },
-		time:       { value: 1.0 },
-		uvScale:    { value: new THREE.Vector2(3.0, 1.0) },
-		texture1:   { value: textureLoader.load("texture/lava/cloud.png") },
-		texture2:   { value: textureLoader.load("texture/lava/lavatile.jpg") }
-
-	};
-
-	uniforms.texture1.value.wrapS = uniforms.texture1.value.wrapT = THREE.RepeatWrapping;
-	uniforms.texture2.value.wrapS = uniforms.texture2.value.wrapT = THREE.RepeatWrapping;
-	
-	// carrega o shader do sol
-	var sunMaterial = new THREE.ShaderMaterial( {
-		uniforms: uniforms,
-		vertexShader: document.getElementById('vertexShader').textContent,
-		fragmentShader: document.getElementById('fragmentShader').textContent,
-	});
-	
-	// cria o sol e aplica o shader
-	sun = new THREE.Mesh( new THREE.SphereGeometry(4, 32, 32), sunMaterial );
-	sun.rotation.x = 0;
-	sun.position.set(0, 30, -50);
-	scene.add(sun);
-	
-	mixer = new THREE.AnimationMixer(scene);
-	
-	var loader = new THREE.JSONLoader();
-	loader.load( 'obj/stork.js', function ( geometry, materials ) {
-		var material = materials[ 0 ];
-		material.morphTargets = true;
-		material.color.setHex(0x000000);
-
-		mesh = new THREE.Mesh(geometry, materials);
-
-		mesh.position.set(0, 17, 0);
-
-		mesh.scale.set(0.1, 0.1, 0.1);
-
-		mesh.rotateY(Math.PI/2);
-
-		mesh.matrixAutoUpdate = false;
-		mesh.updateMatrix();
-
-		scene.add(mesh);
-
-		mixer.clipAction(geometry.animations[0], mesh)
-				.setDuration(1)
-				.startAt( - Math.random() )
-				.play();
-	} );
+	loadExterior();
+	loadSonic();
+	loadAneis();
+	loadNuvens();
+	loadPassaro();
+	criaSol();
 
 	// painel status webgl
 	stats = new Stats();
@@ -341,4 +168,196 @@ function render() {
 	camera.lookAt(scene.position);
 	renderer.render(scene, camera);
 
+}
+
+function criaSol() {
+	// carrega e aplica a texture do sol
+	var textureLoader = new THREE.TextureLoader();
+	
+	uniforms = {
+
+		fogDensity: { value: 0.0001 },
+		fogColor:   { value: new THREE.Vector3(255, 203, 31) },
+		time:       { value: 1.0 },
+		uvScale:    { value: new THREE.Vector2(3.0, 1.0) },
+		texture1:   { value: textureLoader.load("texture/lava/cloud.png") },
+		texture2:   { value: textureLoader.load("texture/lava/lavatile.jpg") }
+
+	};
+
+	uniforms.texture1.value.wrapS = uniforms.texture1.value.wrapT = THREE.RepeatWrapping;
+	uniforms.texture2.value.wrapS = uniforms.texture2.value.wrapT = THREE.RepeatWrapping;
+	
+	// carrega o shader do sol
+	var sunMaterial = new THREE.ShaderMaterial( {
+		uniforms: uniforms,
+		vertexShader: document.getElementById('vertexShader').textContent,
+		fragmentShader: document.getElementById('fragmentShader').textContent,
+	});
+	
+	// cria o sol e aplica o shader
+	sun = new THREE.Mesh( new THREE.SphereGeometry(4, 32, 32), sunMaterial );
+	sun.rotation.x = 0;
+	sun.position.set(0, 30, -50);
+	scene.add(sun);
+}
+
+function loadExterior() {
+	// carrega o exterior
+	mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('obj/exterior/');
+	mtlLoader.load('Security_Gate.mtl', function(materials) {
+
+		materials.preload();
+		
+		objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('obj/exterior/');
+		objLoader.load('Security_Gate.obj', function (object) {
+			var house = object;
+			house.scale.set(70, 100, 70);
+			house.rotateY(Math.PI/2);
+			house.position.set(15, -35, -95);
+
+			scene.add(object);
+		});
+	});
+}
+
+function loadAneis() {
+	// carrega os aneis
+	mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('obj/ring/');
+	mtlLoader.load('ring.mtl', function(materials) {
+		materials.preload();
+
+		objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('obj/ring/');	
+
+		for (var i = 0; i < 3; i++) {
+			switch (i) {
+				case 0:
+					objLoader.load('ring.obj', function (object) {
+						rings[0] = object;
+						rings[0].scale.set(10, 10, 10);
+						rings[0].rotateX(Math.PI/2);
+						rings[0].position.set(35, -16, 0);
+						scene.add(rings[0]);
+					});	
+					break;
+				case 1:
+					objLoader.load('ring.obj', function (object) {
+						rings[1] = object;
+						rings[1].scale.set(10, 10, 10);
+						rings[1].rotateX(Math.PI/2);
+						rings[1].position.set(50, -16, 0);
+						scene.add(rings[1]);
+					});
+					break;
+				case 2:
+					objLoader.load('ring.obj', function (object) {
+						rings[2] = object;
+						rings[2].scale.set(10, 10, 10);
+						rings[2].rotateX(Math.PI/2);
+						rings[2].position.set(65, -16, 0);
+						scene.add(rings[2]);
+					});
+					break;
+			}
+		}
+	});
+}
+
+function loadNuvens() {
+	// carrega textura das nuvens
+	var texture = new THREE.TextureLoader().load( "../texture/cloud.jpg" );
+
+	// carrega primeira nuvem
+	objLoader = new THREE.OBJLoader();
+    objLoader.load( 'obj/cloud/island-cloud.obj', function ( object ) {
+
+		clouds[0] = object;
+		clouds[0].scale.set(0.1, 0.1, 0.1);
+		clouds[0].rotateX(Math.PI/2);
+		clouds[0].position.set(50, 25, -20);
+
+		clouds[0].traverse( function (child) {
+
+			if (child instanceof THREE.Mesh)
+				child.material.map = texture;
+		} );
+
+		scene.add(clouds[0]);
+	});
+
+	// carrega segunda nuvem
+	objLoader = new THREE.OBJLoader();
+    objLoader.load( 'obj/cloud/island-cloud.obj', function ( object ) {
+
+		clouds[1] = object;
+		clouds[1].scale.set(0.1, 0.1, 0.1);
+		clouds[1].rotateX(Math.PI/2);
+		clouds[1].position.set(-50, 25, -20);
+
+		clouds[1].traverse( function (child) {
+
+			if (child instanceof THREE.Mesh)
+				child.material.map = texture;
+		} );
+
+		scene.add(clouds[1]);
+	});
+}
+
+function loadPassaro() {
+	mixer = new THREE.AnimationMixer(scene);
+	
+	var loader = new THREE.JSONLoader();
+	loader.load( 'obj/stork.js', function ( geometry, materials ) {
+		var material = materials[ 0 ];
+		material.morphTargets = true;
+		material.color.setHex(0x000000);
+
+		mesh = new THREE.Mesh(geometry, materials);
+
+		mesh.position.set(0, 17, 0);
+
+		mesh.scale.set(0.1, 0.1, 0.1);
+
+		mesh.rotateY(Math.PI/2);
+
+		mesh.matrixAutoUpdate = false;
+		mesh.updateMatrix();
+
+		scene.add(mesh);
+
+		mixer.clipAction(geometry.animations[0], mesh)
+				.setDuration(1)
+				.startAt( - Math.random() )
+				.play();
+	} );
+}
+
+function loadSonic() {
+	// carrega o sonic
+	mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('obj/sonic/');
+	mtlLoader.load('Sonic.mtl', function(materials) {
+
+		materials.preload();
+
+		objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('obj/sonic/');
+		objLoader.load('Sonic.obj', function (object) {
+        	sonic = object;
+			sonic.scale.set( 1, 1, 1 );
+        	sonic.rotateY(Math.PI/1.6);
+        	sonic.position.set(-50, -35, 0);		
+			scene.add(sonic);
+			
+			sonicMoves();
+		});
+	});
 }
