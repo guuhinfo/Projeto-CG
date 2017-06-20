@@ -271,7 +271,7 @@ function loadAneis() {
 
 function loadNuvens() {
 	// carrega textura das nuvens
-	var texture = new THREE.TextureLoader().load( "../texture/cloud.jpg" );
+	var texture = new THREE.TextureLoader().load( 'texture/cloud.jpg' );
 
 	// carrega primeira nuvem
 	objLoader = new THREE.OBJLoader();
