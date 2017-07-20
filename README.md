@@ -23,7 +23,7 @@ Uso de pelo menos:
 Controles:
 - Seta para cima: Sonic pula
 - Seta para a direita: Sonic anda para frente
-- Clique com o botão direito do mouse, segura e arrasta para os lados: câmera movimenta para os lados
+- Clica com o botão esquerdo do mouse, segura e arrasta para os lados: câmera movimenta para os lados
 
 # Projeto desenvolvido por:
 [@isasalmeron](https://github.com/isasalmeron)
