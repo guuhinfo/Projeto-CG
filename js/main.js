@@ -1,12 +1,15 @@
-if (! Detector.webgl) Detector.addGetWebGLMessage();
+if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var camera, scene, renderer, controls, clock, mixer;
 var mtlLoader, objLoader;
 var rings, sonic, clouds, sun;
+var ringSound;
+var loader = new THREE.AudioLoader();
 var pontosReta = new THREE.Geometry();
 var pontosSalto = new THREE.Geometry();
 var count = 0, j = 0, jump = 0;
 var stats;
+var play = 0;
 
 $(document).ready(function(){
 	init();
@@ -44,6 +47,7 @@ function init() {
 	controls.minAzimuthAngle = - Infinity;
 	controls.maxAzimuthAngle = Infinity;
 	
+	carregaAudio();
 	loadExterior();
 	loadSonic();
 	loadAneis();
@@ -57,6 +61,48 @@ function init() {
 	document.body.appendChild(stats.dom);
 
     window.addEventListener('resize', onWindowResize, false);
+}
+
+function carregaAudio() {
+	audioListener = new THREE.AudioListener();
+	camera.add(audioListener);
+	ringSound = new THREE.Audio(audioListener);
+	scene.add(ringSound);
+	loader.load (
+		'audio/ring.mp3',
+		function (audioBuffer) {
+			ringSound.setBuffer( audioBuffer );
+		},
+		function (xhr) {
+			console.log('audio carregado');
+		}
+	);
+}
+
+function detectaColisao() {
+	if (sonic.position.x > 32 && sonic.position.x < 37) {
+		if (play == 0) {
+			rings[0].scale.set(0, 0, 0);
+			ringSound.play();
+			play++;
+		}
+	}
+
+	if (sonic.position.x > 47 && sonic.position.x < 52) {
+		if (play == 1) {
+			rings[1].scale.set(0, 0, 0);
+			ringSound.play();
+			play++;
+		}
+	}
+
+	if (sonic.position.x > 62 && sonic.position.x < 67) {
+		if (play == 2) {
+			rings[2].scale.set(0, 0, 0);
+			ringSound.play();
+			play++;
+		}
+	}
 }
 
 function sonicJump() {
@@ -76,6 +122,8 @@ function sonicFoward() {
 	sonic.position.z = pontosReta.vertices[count].z;
 
 	count++;
+
+	detectaColisao();
 }
 
 function sonicMoves() {
@@ -144,7 +192,7 @@ function criaCurva(opc) {
 		var reta = new THREE.QuadraticBezierCurve3(
 			new THREE.Vector3(sonic.position.x, -35, 0),
 			new THREE.Vector3(sonic.position.x/2, -35, 0),
-			new THREE.Vector3(30, -35, 0)
+			new THREE.Vector3(67, -35, 0)
 		);
 		
 		pontosReta.vertices = reta.getPoints(20);
