@@ -9,7 +9,7 @@ var pontosReta = new THREE.Geometry();
 var pontosSalto = new THREE.Geometry();
 var count = 0, j = 0, jump = 0;
 var stats;
-var play = 0;
+var play = 0, ultimoPlay = true;
 
 $(document).ready(function(){
 	init();
@@ -82,26 +82,24 @@ function carregaAudio() {
 function detectaColisao() {
 	if (sonic.position.x > 32 && sonic.position.x < 37) {
 		if (play == 0) {
-			rings[0].scale.set(0, 0, 0);
+			rings[0].scale.set(0.0000001, 0.0000001, 0.0000001);
 			ringSound.play();
 			play++;
 		}
 	}
 
-	if (sonic.position.x > 47 && sonic.position.x < 52) {
+	if (sonic.position.x > 45 && sonic.position.x < 60 && sonic.position.y > -20) {
 		if (play == 1) {
-			rings[1].scale.set(0, 0, 0);
+			rings[1].scale.set(0.0000001, 0.0000001, 0.0000001);
 			ringSound.play();
 			play++;
 		}
 	}
 
-	if (sonic.position.x > 62 && sonic.position.x < 67) {
-		if (play == 2) {
-			rings[2].scale.set(0, 0, 0);
-			ringSound.play();
-			play++;
-		}
+	if (sonic.position.x > 62 && sonic.position.x < 67 && ultimoPlay) {
+		rings[2].scale.set(0.0000001, 0.0000001, 0.0000001);
+		ringSound.play();
+		ultimoPlay = false;
 	}
 }
 
@@ -110,6 +108,8 @@ function sonicJump() {
 	sonic.position.x = pontosSalto.vertices[j].x;
 	sonic.position.y = pontosSalto.vertices[j].y;
 	sonic.position.z = pontosSalto.vertices[j].z;
+
+	detectaColisao();
 }
 
 function sonicFoward() {
@@ -299,7 +299,7 @@ function loadAneis() {
 						rings[1] = object;
 						rings[1].scale.set(10, 10, 10);
 						rings[1].rotateX(Math.PI/2);
-						rings[1].position.set(50, -16, 0);
+						rings[1].position.set(50, 2, 0);
 						scene.add(rings[1]);
 					});
 					break;
